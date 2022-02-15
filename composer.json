@@ -23,6 +23,7 @@
         "symfony/expression-language": "5.4.*",
         "symfony/flex": "^2.1",
         "symfony/framework-bundle": "5.4.*",
+        "symfony/monolog-bundle": "^3.0",
         "symfony/property-access": "5.4.*",
         "symfony/property-info": "5.4.*",
         "symfony/proxy-manager-bridge": "5.4.*",
@@ -37,7 +38,9 @@
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fzaninotto/faker": "^1.5",
         "symfony/maker-bundle": "^1.36",
-        "symfony/var-dumper": "5.4.*"
+        "symfony/stopwatch": "5.4.*",
+        "symfony/var-dumper": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*"
     },
     "config": {
         "allow-plugins": {
