@@ -1,39 +1,72 @@
 // Les imports importants
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-
+import { HashRouter, Route, Routes } from 'react-router-dom';
+// start the Stimulus application
+import './bootstrap';
+import Navbar from './components/Navbar';
+import PrivateRoute from './components/PrivateRoute';
+import AuthContext from './contexts/AuthContext';
+import CustomersPage from './pages/CustomersPage';
+import HomePage from './pages/HomePage';
+import InvoicesPage from './pages/InvoicesPage';
+import LoginPage from './pages/LoginPage';
+import AuthAPI from './services/authAPI';
 /*
  * Welcome to your app's main JavaScript file!
  *
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 
-// start the Stimulus application
-import './bootstrap';
-import Navbar from './components/Navbar';
-import HomePage from './pages/HomePage';
-import { HashRouter, Routes, Route } from 'react-router-dom';
-import CustomersPage from './pages/CustomersPage';
-import CustomersPageWithPagination from './pages/CustomersPageWithPagination';
-import InvoicesPage from './pages/InvoicesPage';
 
-console.log("Hello World !!!");
+
+// console.log("Hello World !!!");
+
+AuthAPI.setup();
+
+// const PrivateRoute = () => {
+//     const { isAuthenticated } = useContext(AuthContext);
+//     return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+// };
 
 const App = () => {
-    return <HashRouter>
-        <Navbar />
-        <main className="container pt-5">
-            <Routes>
-                <Route path='/invoices' element={<InvoicesPage />} />
-                <Route path='/customers' element={<CustomersPage />} />
-                <Route path="/" element={<HomePage />} />
-            </Routes>
-        </main>
-    </HashRouter>
+    // TODO : il faudrait par défaut que l'on demande à notre AuthAPI si on est connecté ou pas 
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        AuthAPI.isAuthenticated()
+    );
+
+    return (
+        <AuthContext.Provider
+            value={{
+                isAuthenticated,
+                setIsAuthenticated
+            }}
+        >
+            <HashRouter>
+            <Navbar />
+            <main className="container pt-5">
+                <Routes>
+                    <Route 
+                        path='/login' 
+                        element={<LoginPage />} 
+                    />
+                    {/* <Route path="/invoices" element={<InvoicesPage />} />
+                    <Route path="/customers" element={<CustomersPage />} /> */}
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/invoices" element={<InvoicesPage />} />
+                    </Route>
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/customers" element={<CustomersPage />} />
+                    </Route>
+                    <Route path="/" element={<HomePage />} />
+                </Routes>
+            </main>
+        </HashRouter>
+    </AuthContext.Provider>
+    );
 }
 
 const rootElement = document.querySelector('#app');
