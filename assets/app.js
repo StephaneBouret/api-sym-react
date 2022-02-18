@@ -7,10 +7,13 @@ import './bootstrap';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import AuthContext from './contexts/AuthContext';
+import CustomerPage from './pages/CustomerPage';
 import CustomersPage from './pages/CustomersPage';
 import HomePage from './pages/HomePage';
+import InvoicePage from './pages/InvoicePage';
 import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import AuthAPI from './services/authAPI';
 /*
  * Welcome to your app's main JavaScript file!
@@ -53,10 +56,20 @@ const App = () => {
                         path='/login' 
                         element={<LoginPage />} 
                     />
+                    <Route 
+                        path='/register' 
+                        element={<RegisterPage />} 
+                    />
                     {/* <Route path="/invoices" element={<InvoicesPage />} />
                     <Route path="/customers" element={<CustomersPage />} /> */}
                     <Route element={<PrivateRoute />}>
+                        <Route path="/invoices/:id" element={<InvoicePage />} />
+                    </Route>
+                    <Route element={<PrivateRoute />}>
                         <Route path="/invoices" element={<InvoicesPage />} />
+                    </Route>
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/customers/:id" element={<CustomerPage />} />
                     </Route>
                     <Route element={<PrivateRoute />}>
                         <Route path="/customers" element={<CustomersPage />} />
