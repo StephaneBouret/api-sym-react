@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Field from '../components/forms/Field';
 import Select from '../components/forms/Select';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 import CustomersAPI from '../services/customersAPI';
 import invoicesAPI from '../services/invoicesAPI';
-import axios from 'axios';
 
 const InvoicePage = () => {
     const navigate = useNavigate();
@@ -26,15 +27,18 @@ const InvoicePage = () => {
 
     const [customers, setCustomers] = useState([]);
     const [editing, setEditing] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Récupération des clients
     const fetchCustomers = async () => {
         try {
             const data = await CustomersAPI.findAll();
             setCustomers(data);
+            setLoading(false);
 
             if (!invoice.customer) setInvoice({ ...invoice, customer: data[0].id });
         } catch (error) {
+            toast.error("Impossible de charger les clients");
             navigate("/invoices");
             // console.log(error.response);
         }
@@ -46,7 +50,9 @@ const InvoicePage = () => {
             const { amount, status, customer } = await invoicesAPI.find(id)      
             // console.log(data);
             setInvoice({ amount, status, customer: customer.id });
+            setLoading(false);
         } catch (error) {
+            toast.error("Impossible de charger la facture demandée");
             navigate("/invoices");
         }
     };
@@ -77,9 +83,11 @@ const InvoicePage = () => {
         try {
             if (editing) {
                 await invoicesAPI.update(id, invoice);
+                toast.success("La facture a bien été modifiée");
                 // console.log(response);
             } else {
                 await invoicesAPI.create(invoice);
+                toast.success("La facture a bien été enregistrée");
                 // console.log(response);
                 navigate("/invoices");
             }
@@ -92,6 +100,7 @@ const InvoicePage = () => {
                     apiErrors[propertyPath] = message;
                     // console.log(apiErrors);
                     setErrors(apiErrors);
+                    toast.error("Des erreurs dans votre formulaire");
                 })
             }
         }
@@ -102,7 +111,9 @@ const InvoicePage = () => {
             {(editing && <h1>Modification d'une facture</h1>) || (
                 <h1>Création d'une facture</h1>
             )}
+            {loading && <FormContentLoader />}
 
+            {!loading && (
             <form onSubmit={handleSubmit}>
                 <Field 
                     name="amount"
@@ -146,6 +157,7 @@ const InvoicePage = () => {
                     </Link>
                 </div>
             </form>
+            )}
         </>
      );
 }

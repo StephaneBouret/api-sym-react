@@ -15,6 +15,8 @@ import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AuthAPI from './services/authAPI';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -78,6 +80,9 @@ const App = () => {
                 </Routes>
             </main>
         </HashRouter>
+        <ToastContainer 
+            position={toast.POSITION.BOTTOM_LEFT}
+        />
     </AuthContext.Provider>
     );
 }

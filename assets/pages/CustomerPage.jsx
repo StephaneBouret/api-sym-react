@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Field from '../components/forms/Field';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 import customersAPI from '../services/customersAPI';
 
 const CustomerPage = () => {
@@ -27,7 +29,7 @@ const CustomerPage = () => {
         email: "",
         company: ""
     });
-
+    const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false);
 
     // Récupération du customer en fonction de l'identifiant
@@ -38,8 +40,10 @@ const CustomerPage = () => {
             );  
             // console.log(data);           
             setCustomer({ firstName, lastName, email, company });
+            setLoading(false);
         } catch (error) {
             // console.log(error.response);
+            toast.error("Le client n'a pas pu être chargé");
             navigate("/customers");
         }
     }
@@ -47,6 +51,7 @@ const CustomerPage = () => {
     // Chargement du customer si besoin au chargement du composant ou au changement de l'identifiant
     useEffect(() => {
         if (id !== "new") {
+            setLoading(true);
             setEditing(true);
             fetchCustomer(id);
         }
@@ -63,15 +68,17 @@ const CustomerPage = () => {
         event.preventDefault();
         // console.log(customer);
         try {
+            setErrors({});
+            
             if (editing) {
-                await customersAPI.update(id, customer)
+                await customersAPI.update(id, customer);
+                toast.success("Le client a bien été modifié");
                 // console.log(response.data);
             } else {
                 await customersAPI.create(customer);
+                toast.success("Le client a bien été créé");
                 navigate("/customers");
             }
-
-            setErrors({});
             // console.log(response.data);
         } catch ({ response }) {
             const { violations } = response.data;
@@ -82,6 +89,7 @@ const CustomerPage = () => {
                     apiErrors[propertyPath] = message;
                     // console.log(apiErrors);
                     setErrors(apiErrors);
+                    toast.error("Des erreurs dans votre formulaire !");
                 })
             }
         }
@@ -92,7 +100,8 @@ const CustomerPage = () => {
         {(!editing && <h1>Création d'un client</h1>) || (
             <h1>Modification du client</h1>
         )}
-
+        {loading && <FormContentLoader />}
+        {!loading && (
         <form onSubmit={handleSubmit}>
             <Field
                 name="lastName"
@@ -136,6 +145,7 @@ const CustomerPage = () => {
                 </Link>
           </div>
         </form>
+        )}
         </>
      );
 }

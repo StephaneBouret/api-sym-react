@@ -3,6 +3,7 @@ import AuthContext from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import authAPI from '../services/authAPI';
 import Field from '../components/forms/Field';
+import { toast } from 'react-toastify';
 
 const LoginPage = (props) => {
 
@@ -34,11 +35,13 @@ const LoginPage = (props) => {
             await authAPI.authenticate(credentials);
             setError("");
             setIsAuthenticated(true);
+            toast.success("Vous êtes désormais connecté !");
             navigate("/customers")
         } catch (error) {
             setError(
                 "Aucun compte ne possède cette adresse email ou alors les informations ne correspondent pas !"
             );
+            toast.error("Une erreur est survenue");
         }
 
         // console.log(credentials);

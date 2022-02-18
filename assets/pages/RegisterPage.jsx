@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Field from '../components/forms/Field';
 import usersAPI from '../services/usersAPI';
-import axios from "axios"; 
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -38,12 +38,16 @@ const RegisterPage = () => {
             apiErrors.passwordConfirm =
                 "Votre confirmation de mot de passe n'est pas conforme avec le mot de passe original";
             setErrors(apiErrors);
+            toast.error("Des erreurs dans votre formulaire !");
             return;
         }
         // console.log(user);
         try {
             await usersAPI.register(user);
             setErrors({});
+            toast.success(
+                "Vous êtes désormais inscrit, vous pouvez vous connecter !"
+            );
             navigate("/login");
             // console.log(response);
         } catch (error) {
@@ -54,6 +58,7 @@ const RegisterPage = () => {
                 });
                 setErrors(apiErrors);
             }
+            toast.error("Des erreurs dans votre formulaire !");
             // console.log(error.response);
         }
     }
