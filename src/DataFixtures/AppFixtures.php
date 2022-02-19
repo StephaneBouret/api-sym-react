@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Invoice;
