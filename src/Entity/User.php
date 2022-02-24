@@ -4,22 +4,42 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\CheckEmailController;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email", message="Un utilisateur ayant cette adresse email existe déjà")
  */
 #[ApiResource(
-    normalizationContext: ['groups' => ['users_read']]
+    normalizationContext: ['groups' => ['users_read']],
+    itemOperations: [
+        'get',
+        'put',
+        'delete',
+        'get_email' => [
+            'method' => 'GET',
+            'path' => '/forgetpassword/{email}/get_email',
+            'controller' => CheckEmailController::class,             
+            'read'=> false,
+            'pagination_enabled'=> false,
+            'openapi_context' => [
+                'summary' => 'Vérifie si email existe dans la BDD',
+                'description' => 'Vérifie si email existe dans la BDD'
+            ]
+        ]
+    ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -27,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read"])]
+    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read", "forgets_read"])]
     private $id;
 
     /**
@@ -35,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(message="L'email doit être renseigné !")
      * @Assert\Email(message="L'adresse email doit avoir un format valide !")
      */
-    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read"])]
+    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read", "forgets_read"])]
     private $email;
 
     /**
@@ -55,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(message="Le prénom est obligatoire")
      * @Assert\Length(min=3, minMessage="Le prénom doit faire entre 3 et 255 caractères", max=255, maxMessage="Le prénom doit faire entre 3 et 255 caractères")
      */
-    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read"])]
+    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read", "forgets_read"])]
     private $firstName;
 
     /**
@@ -63,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank(message="Le nom de famille est obligatoire")
      * @Assert\Length(min=3, minMessage="Le nom de famille doit faire entre 3 et 255 caractères", max=255, maxMessage="Le nom de famille doit faire entre 3 et 255 caractères")
      */
-    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read"])]
+    #[Groups(["customers_read", "invoices_read", "invoices_subresource", "users_read", "forgets_read"])]
     private $lastName;
 
     /**

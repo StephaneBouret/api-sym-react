@@ -56,9 +56,14 @@ const Navbar = (props) => {
               </li>
             </>
           )) || (
+            <>
+            <li className="nav-item me-2">
+                <NavLink to="/profile" className="btn btn-info">Mon profil</NavLink>
+            </li>
             <li className="nav-item">
                 <button onClick={handleLogout} className="btn btn-danger">Déconnexion</button>
-            </li>
+            </li>        
+            </>
           )}
         </ul>
       </div>

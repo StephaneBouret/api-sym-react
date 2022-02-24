@@ -14,6 +14,7 @@ import InvoicePage from './pages/InvoicePage';
 import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import UserPage from './pages/UserPage';
 import AuthAPI from './services/authAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,6 +26,8 @@ import 'react-toastify/dist/ReactToastify.css';
  */
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
 
 
 
@@ -62,6 +65,11 @@ const App = () => {
                         path='/register' 
                         element={<RegisterPage />} 
                     />
+                    <Route path='/forgetpassword' element={<ForgetPassword />} />
+                    <Route path='/resetpassword/:token' element={<ResetPassword />} />
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/profile" element={<UserPage />} />
+                    </Route>
                     {/* <Route path="/invoices" element={<InvoicesPage />} />
                     <Route path="/customers" element={<CustomersPage />} /> */}
                     <Route element={<PrivateRoute />}>

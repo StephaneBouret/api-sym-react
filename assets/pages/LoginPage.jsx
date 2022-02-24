@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import AuthContext from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import authAPI from '../services/authAPI';
 import Field from '../components/forms/Field';
 import { toast } from 'react-toastify';
@@ -72,6 +72,9 @@ const LoginPage = (props) => {
                 <button type="submit" className="btn btn-success">
                     Je me connecte
                 </button>
+                <Link to="/forgetpassword" className='btn btn-link'>
+                    J'ai oublié mon mot de passe
+                </Link>
             </div>
         </form>
         </>
