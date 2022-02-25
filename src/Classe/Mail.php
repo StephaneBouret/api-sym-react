@@ -7,8 +7,8 @@ use Mailjet\Resources;
 
 Class Mail
 {
-    private $api_key = '52f99b29258b7c58db3fd8b01b30abfd';
-    private $api_key_secret = '7c02f4a462e446c10ba604636dd4e272';
+    private $api_key = 'f08ae1615d74361792051e28524c48ed';
+    private $api_key_secret = '419bf99263e5cccefdebc69661b1e740';
 
     public function send($to_email, $to_name, $subject, $content)
     {
@@ -17,8 +17,8 @@ Class Mail
             'Messages' => [
                 [
                     'From' => [
-                        'Email' => "contact@discommentondit.com",
-                        'Name' => "Dis, comment on dit ?"
+                        'Email' => "contact@discommentondit.fr",
+                        'Name' => "SYMREACT"
                     ],
                     'To' => [
                         [
@@ -26,7 +26,7 @@ Class Mail
                             'Name' => $to_name
                         ]
                     ],
-                    'TemplateID' => 3375265,
+                    'TemplateID' => 3677200,
                     'TemplateLanguage' => true,
                     'Subject' => $subject,
                     'Variables' => [
